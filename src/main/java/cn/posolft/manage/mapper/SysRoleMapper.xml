@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.posolft.manage.dao.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="cn.posolft.manage.pojo.SysRole" >
+    <id column="ID" property="id" jdbcType="CHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" type="cn.posolft.manage.pojo.SysRole" >
+    <id column="ID" property="id" jdbcType="CHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <collection property="sysResources" column="id" select="selectSysResourcesListByRoleId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, CODE, NAME, MEMO
+  </sql>
+  <sql id="Base_Where_T">
+  		<where>
+  			<if test="pojo!=null">
+	            <if test="pojo.id != null">
+	                and id = #{pojo.id}
+	            </if>
+	            <if test="pojo.name != null and pojo.name != ''">
+	                and name like concat('%', #{pojo.name}, '%')
+	            </if>
+	            <if test="pojo.code != null and pojo.code != ''">
+	                and code like concat('%', #{pojo.code}, '%')
+	            </if>
+	            <if test="pojo.memo != null and pojo.memo != ''">
+	                and memo like concat('%', #{pojo.memo}, '%')
+	            </if>
+            </if>
+        </where>
+  </sql>
+  <sql id="Base_Limit">
+  		<if test="param != null">
+  			limit #{param.pageStart} , #{param.rows}
+  		</if>
+  </sql>
+  <sql id="Base_Order_Sort">
+  		<if test="param!=null and param.getSortConds().size() != 0">
+            order by
+            <foreach collection="param.getSortConds()" item="sortCond" separator=",">
+                ${sortCond.column} ${sortCond.order}
+            </foreach>
+        </if>
+  </sql>
+  <select id="selectListByT" resultMap="BaseResultMap">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_role
+	    <include refid="Base_Where_T" />
+	    <include refid="Base_Order_Sort" />
+	    <include refid="Base_Limit" />
+  </select>
+  <select id="selectCountByT" resultType="int">
+        select count(1) from sys_role
+        <include refid="Base_Where_T" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where ID = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap2" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where ID = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectSysResourcesListByRoleId" parameterType="java.lang.String" resultMap="cn.posolft.manage.dao.SysResourceMapper.BaseResultMap">
+        select 
+	    <include refid="cn.posolft.manage.dao.SysResourceMapper.Base_Column_List" />
+	    from sys_resource where id in (select resource_id from sys_role_resource where role_id=#{id})
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_role
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.posolft.manage.pojo.SysRole" >
+    insert into sys_role (ID, CODE, NAME, 
+      MEMO)
+    values (#{id,jdbcType=CHAR}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.posolft.manage.pojo.SysRole" >
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.posolft.manage.pojo.SysRole" >
+    update sys_role
+    <set >
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.posolft.manage.pojo.SysRole" >
+    update sys_role
+    set CODE = #{code,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

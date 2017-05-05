@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.posolft.manage.dao.SysUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="cn.posolft.manage.pojo.SysUserRole" >
+    <result column="USER_ID" property="userId" jdbcType="CHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="CHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="cn.posolft.manage.pojo.SysUserRole" >
+    insert into sys_user_role (USER_ID, ROLE_ID)
+    values (#{userId,jdbcType=CHAR}, #{roleId,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.posolft.manage.pojo.SysUserRole" >
+    insert into sys_user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=CHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertByList" parameterType="java.util.List">
+    insert into sys_user_role (user_id,role_id)
+    values 
+    <foreach collection="list" item="item" index="index" separator="," >
+        (#{item.userId},#{item.roleId})
+    </foreach>
+  </insert>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_user_role where user_id = #{id,jdbcType=CHAR}
+  </delete>
+</mapper>

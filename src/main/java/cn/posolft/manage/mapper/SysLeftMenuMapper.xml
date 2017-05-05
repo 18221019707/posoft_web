@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.posolft.manage.dao.SysLeftMenuMapper" >
+  <resultMap id="BaseResultMap" type="cn.posolft.manage.pojo.SysLeftMenu" >
+    <id column="ID" property="id" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="CHAR" />
+    <result column="RESOURCE_ID" property="resourceId" jdbcType="CHAR" />
+    <result column="TYPE" property="type" jdbcType="CHAR" />
+    <result column="IDX" property="idx" jdbcType="DECIMAL" />
+    <result column="MENU_LEVEL" property="menuLevel" jdbcType="CHAR" />
+    <collection property="sons" column="id" select="selectChildListByT" fetchType="lazy"/>
+    <collection property="sysResource" column="RESOURCE_ID" select="cn.posolft.manage.dao.SysResourceMapper.selectByPrimaryKey" fetchType="lazy"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, PARENT_ID, RESOURCE_ID, TYPE, IDX, MENU_LEVEL
+  </sql>
+  <sql id="Base_Where_T">
+  		<where>
+  			<if test="pojo!=null">
+	            <if test="pojo.id != null">
+	                and id = #{pojo.id}
+	            </if>
+	            <if test="pojo.name != null and pojo.name != ''">
+	                and name like concat('%', #{pojo.name}, '%')
+	            </if>
+	            <if test="pojo.parentId != null">
+	                and parent_id = #{pojo.parentId}
+	            </if>
+	            <if test="pojo.resourceId != null">
+	                and resource_id = #{pojo.resourceId}
+	            </if>
+	            <if test="pojo.type != null">
+	                and type = #{pojo.type}
+	            </if>
+	            <if test="pojo.idx != null">
+	                and idx = #{pojo.idx}
+	            </if>
+	            <if test="pojo.menuLevel != null">
+	                and menu_level = #{pojo.menuLevel}
+	            </if>
+            </if>
+        </where>
+  </sql>
+  <sql id="Base_Limit">
+  		<if test="param != null">
+  			limit #{param.pageStart} , #{param.rows}
+  		</if>
+  </sql>
+  <select id="selectListByT" resultMap="BaseResultMap">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_left_menu
+	    <include refid="Base_Where_T" />
+	    order by idx asc  
+	    <include refid="Base_Limit" />
+  </select>
+  <select id="selectCountByT" resultType="int">
+        select count(1) from sys_left_menu
+        <include refid="Base_Where_T" />
+  </select>
+  <select id="selectChildListByT" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_left_menu where parent_id=#{id} order by idx asc 
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_left_menu
+    where ID = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_left_menu
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.posolft.manage.pojo.SysLeftMenu" >
+    insert into sys_left_menu (ID, NAME, PARENT_ID, 
+      RESOURCE_ID, TYPE, IDX, MENU_LEVEL
+      )
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=CHAR}, 
+      #{resourceId,jdbcType=CHAR}, #{type,jdbcType=CHAR}, #{idx,jdbcType=DECIMAL}, #{menuLevel,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.posolft.manage.pojo.SysLeftMenu" >
+    insert into sys_left_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="resourceId != null" >
+        RESOURCE_ID,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="idx != null" >
+        IDX,
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=CHAR},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=CHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="idx != null" >
+        #{idx,jdbcType=DECIMAL},
+      </if>
+      <if test="menuLevel != null" >
+        #{menuLevel,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.posolft.manage.pojo.SysLeftMenu" >
+    update sys_left_menu
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=CHAR},
+      </if>
+      <if test="resourceId != null" >
+        RESOURCE_ID = #{resourceId,jdbcType=CHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=CHAR},
+      </if>
+      <if test="idx != null" >
+        IDX = #{idx,jdbcType=DECIMAL},
+      </if>
+      <if test="menuLevel != null" >
+        MENU_LEVEL = #{menuLevel,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.posolft.manage.pojo.SysLeftMenu" >
+    update sys_left_menu
+    set NAME = #{name,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=CHAR},
+      RESOURCE_ID = #{resourceId,jdbcType=CHAR},
+      TYPE = #{type,jdbcType=CHAR},
+      IDX = #{idx,jdbcType=DECIMAL},
+      MENU_LEVEL = #{menuLevel,jdbcType=CHAR}
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

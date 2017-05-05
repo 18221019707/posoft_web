@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+    <classPathEntry location="H:\work\work\posoft_web\webapp\WEB-INF\lib\mysql-connector-java-5.1.30.jar" />  
+    <context id="DB2Tables" targetRuntime="MyBatis3">  
+        <commentGenerator>  
+            <property name="suppressAllComments" value="true" />  
+            <property name="suppressDate" value="true" />   
+        </commentGenerator>  
+  		
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" 
+        				connectionURL="jdbc:mysql://127.0.0.1:3306/strom" 
+        				userId="root" 
+        				password="root" />  
+  
+        <javaTypeResolver>  
+            <property name="forceBigDecimals" value="false" />  
+              
+        </javaTypeResolver>  
+  
+        
+        <javaModelGenerator targetPackage="cn.posolft.manage.pojo" targetProject="posoft_web/src/main/java">  
+            <property name="enableSubPackages" value="true"/>  
+            <property name="trimStrings" value="true"/>  
+        </javaModelGenerator>  
+         
+        <sqlMapGenerator targetPackage="cn.posolft.manage.mapper" targetProject="posoft_web/src/main/java">  
+            <property name="enableSubPackages" value="true"/>  
+        </sqlMapGenerator>  
+        
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cn.posolft.manage.dao" targetProject="posoft_web/src/main/java" >  
+            <property name="enableSubPackages" value="true"/>  
+            <property name="rootInterface" value="cn.posolft.manage.dao.BaseMapper"/>  
+        </javaClientGenerator> 
+  		
+        <table tableName="sys_dict" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" selectByExampleQueryId="true" enableUpdateByExample="false">  
+            
+        </table>  
+    </context> 
+</generatorConfiguration>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.posolft.manage.dao.SysDictMapper" >
+  <resultMap id="BaseResultMap" type="cn.posolft.manage.pojo.SysDict" >
+    <id column="ID" property="id" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="IDX" property="idx" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, VALUE, TYPE, MEMO, STATUS, IDX
+  </sql>
+  <sql id="Base_Where_T">
+  		<where>
+  			<if test="pojo!=null">
+	            <if test="pojo.id != null">
+	                and id = #{pojo.id}
+	            </if>
+	            <if test="pojo.name != null and pojo.name != ''">
+	                and name like concat('%', #{pojo.name}, '%')
+	            </if>
+	            <if test="pojo.type != null and pojo.type != ''">
+	                and code like concat('%', #{pojo.type}, '%')
+	            </if>
+	            <if test="pojo.memo != null and pojo.memo != ''">
+	                and memo like concat('%', #{pojo.memo}, '%')
+	            </if>
+            </if>
+        </where>
+  </sql>
+  <sql id="Base_Limit">
+  		<if test="param != null">
+  			limit #{param.pageStart} , #{param.rows}
+  		</if>
+  </sql>
+  <sql id="Base_Order_Sort">
+  		<if test="param!=null and param.getSortConds().size() != 0">
+            order by
+            <foreach collection="param.getSortConds()" item="sortCond" separator=",">
+                ${sortCond.column} ${sortCond.order}
+            </foreach>
+        </if>
+  </sql>
+  <select id="selectListByT" resultMap="BaseResultMap">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_dict
+	    <include refid="Base_Where_T" />
+	    <include refid="Base_Order_Sort" />
+	    <include refid="Base_Limit" />
+  </select>
+  <select id="selectCountByT" resultType="int">
+        select count(1) from sys_dict
+        <include refid="Base_Where_T" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dict
+    where ID = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_dict
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.posolft.manage.pojo.SysDict" >
+    insert into sys_dict (ID, NAME, VALUE, 
+      TYPE, MEMO, STATUS, 
+      IDX)
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{idx,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.posolft.manage.pojo.SysDict" >
+    insert into sys_dict
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="value != null" >
+        VALUE,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="idx != null" >
+        IDX,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="idx != null" >
+        #{idx,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.posolft.manage.pojo.SysDict" >
+    update sys_dict
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        VALUE = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="idx != null" >
+        IDX = #{idx,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.posolft.manage.pojo.SysDict" >
+    update sys_dict
+    set NAME = #{name,jdbcType=VARCHAR},
+      VALUE = #{value,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      IDX = #{idx,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

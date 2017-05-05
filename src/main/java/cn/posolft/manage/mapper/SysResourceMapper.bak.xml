@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.posolft.dao.SysResourceMapper" >
+  <resultMap id="BaseResultMap" type="cn.posolft.pojo.SysResource" >
+    <id column="ID" property="id" jdbcType="CHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="CHAR" />
+    <result column="RES_LEVEL" property="resLevel" jdbcType="CHAR" />
+    <result column="DEP_URL" property="depUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, URL, MEMO, PARENT_ID, RES_LEVEL, DEP_URL
+  </sql>
+  <sql id="Base_Where_T">
+  		<where>
+            <if test="pojo.id != null">
+                and id = #{pojo.id}
+            </if>
+            <if test="pojo.name != null and pojo.name != ''">
+                and name like concat('%', #{pojo.name}, '%')
+            </if>
+            <if test="pojo.url != null and pojo.url != ''">
+                and url like concat('%', #{pojo.url}, '%')
+            </if>
+            <if test="pojo.memo != null and pojo.memo != ''">
+                and memo like concat('%', #{pojo.memo}, '%')
+            </if>
+            <if test="pojo.parentId != null">
+                and parent_id = #{pojo.parentId}
+            </if>
+            <if test="pojo.resLevel != null and pojo.resLevel != ''">
+                and res_level like concat('%', #{pojo.resLevel}, '%')
+            </if>
+            <if test="pojo.depUrl != null and pojo.depUrl != ''">
+                and dep_url like concat('%', #{pojo.depUrl}, '%')
+            </if>
+            <!-- <if test="pojo.content != null and pojo.content != ''">
+                and match(content) against(#{pojo.content})
+            </if> -->
+        </where>
+  </sql>
+  <select id="selectListByT" resultType="cn.posolft.pojo.SysResource">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_resource
+        
+        <if test="_parameter.getSortCond().size() != 0">
+            order by
+            <foreach collection="_parameter.getSortCond()" item="sortCond" separator=",">
+                ${sortCond.column} ${sortCond.order}
+            </foreach>
+        </if>
+  </select>
+  <select id="selectListByMap" resultType="cn.posolft.pojo.SysResource">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_resource
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like concat('%', #{title}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                and author like concat('%', #{author}, '%')
+            </if>
+            <if test="content != null and content != ''">
+                and match(content) against(#{content})
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="created != null and created != ''">
+                and created = #{created}
+            </if>
+        </where>
+        <if test="_parameter.getSortCond().size() != 0">
+            order by
+            <foreach collection="_parameter.getSortCond()" item="sortCond" separator=",">
+                ${sortCond.column} ${sortCond.order}
+            </foreach>
+        </if>
+
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_resource
+    where ID = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_resource
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.posolft.pojo.SysResource" >
+    insert into sys_resource (ID, NAME, URL, MEMO, 
+      PARENT_ID, RES_LEVEL, DEP_URL
+      )
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=CHAR}, #{resLevel,jdbcType=CHAR}, #{depUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.posolft.pojo.SysResource" >
+    insert into sys_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="resLevel != null" >
+        RES_LEVEL,
+      </if>
+      <if test="depUrl != null" >
+        DEP_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=CHAR},
+      </if>
+      <if test="resLevel != null" >
+        #{resLevel,jdbcType=CHAR},
+      </if>
+      <if test="depUrl != null" >
+        #{depUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.posolft.pojo.SysResource" >
+    update sys_resource
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=CHAR},
+      </if>
+      <if test="resLevel != null" >
+        RES_LEVEL = #{resLevel,jdbcType=CHAR},
+      </if>
+      <if test="depUrl != null" >
+        DEP_URL = #{depUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.posolft.pojo.SysResource" >
+    update sys_resource
+    set NAME = #{name,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=CHAR},
+      RES_LEVEL = #{resLevel,jdbcType=CHAR},
+      DEP_URL = #{depUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

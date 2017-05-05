@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.posolft.manage.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="cn.posolft.manage.pojo.SysUser" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="CHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="cn.posolft.manage.pojo.SysUser" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="CHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <collection property="sysRoles" column="id" select="selectSysRoleListByUserId" fetchType="lazy"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, LOGIN_NAME, NAME, PWD, PHONE, EMAIL, STATUS
+  </sql>
+  <sql id="Base_Where_T">
+  		<where>
+  			<if test="pojo!=null">
+	            <if test="pojo.id != null">
+	                and id = #{pojo.id}
+	            </if>
+	            <if test="pojo.name != null and pojo.name != ''">
+	                and name like concat('%', #{pojo.name}, '%')
+	            </if>
+	            <if test="pojo.loginName != null and pojo.loginName != ''">
+	                and login_name like concat('%', #{pojo.loginName}, '%')
+	            </if>
+	            <if test="pojo.status != null and pojo.status != ''">
+	                and status = #{pojo.status}
+	            </if>
+            </if>
+        </where>
+  </sql>
+  <sql id="Base_Limit">
+  		<if test="param != null">
+  			limit #{param.pageStart} , #{param.rows}
+  		</if>
+  </sql>
+  <sql id="Base_Order_Sort">
+  		<if test="param!=null and param.getSortConds().size() != 0">
+            order by
+            <foreach collection="param.getSortConds()" item="sortCond" separator=",">
+                ${sortCond.column} ${sortCond.order}
+            </foreach>
+        </if>
+  </sql>
+  <select id="selectListByT" resultMap="BaseResultMap2">
+        select 
+	    <include refid="Base_Column_List" />
+	    from sys_user
+	    <include refid="Base_Where_T" />
+	    <include refid="Base_Order_Sort" />
+	    <include refid="Base_Limit" />
+  </select>
+  <select id="selectCountByT" resultType="int">
+        select count(1) from sys_user
+        <include refid="Base_Where_T" />
+  </select>
+  <select id="selectSysRoleListByUserId" parameterType="java.lang.String" resultMap="cn.posolft.manage.dao.SysRoleMapper.BaseResultMap">
+        select 
+	    <include refid="cn.posolft.manage.dao.SysRoleMapper.Base_Column_List" />
+	    from sys_role where id in (select role_id from sys_user_role where user_id=#{id})
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap2" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.posolft.manage.pojo.SysUser" >
+    insert into sys_user (ID, LOGIN_NAME, NAME, 
+      PWD, PHONE, EMAIL, STATUS
+      )
+    values (#{id,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.posolft.manage.pojo.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="loginName != null" >
+        LOGIN_NAME,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="pwd != null" >
+        PWD,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.posolft.manage.pojo.SysUser" >
+    update sys_user
+    <set >
+      <if test="loginName != null" >
+        LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.posolft.manage.pojo.SysUser" >
+    update sys_user
+    set LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=CHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=CHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
