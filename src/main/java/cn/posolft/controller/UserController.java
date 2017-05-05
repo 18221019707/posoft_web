@@ -14,7 +14,7 @@ import cn.posolft.service.IUserService;
 @RequestMapping("/user")  
 public class UserController {  
     @Resource  
-    private IUserService userService;  
+    private IUserService userService ;  
       
     @RequestMapping("/login")  
     public String toIndex(HttpServletRequest request,Model model){  
